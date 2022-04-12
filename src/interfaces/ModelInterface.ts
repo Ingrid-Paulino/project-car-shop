@@ -5,5 +5,3 @@ export interface Model<T> {
   update(id: string, obj: object): Promise<T | null>,
   delete(id: string): Promise<T | null>
 }
-
-// export default Model;
