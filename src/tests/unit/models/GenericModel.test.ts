@@ -16,7 +16,7 @@ describe('GenericModel', () => {
     seatsQty: { type: Number, required: true },
   })
 
-  let genericModel = new GenericModel(mongoose.model('Generic', GenericSchema));
+  let genericModel = new GenericModel(mongoose.model('GENERIC', GenericSchema));
 
   const mock = {
     _id: "4edd40c86762e0fb12000003",

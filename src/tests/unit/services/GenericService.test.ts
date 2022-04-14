@@ -22,7 +22,7 @@ describe('GenericService', () => {
   //pq da ero de class abstract
   // let genericService = new GenericServices(mongoose.model('Generic', GenericSchema));
 
-  let model = new GenericModel((mongoose.model('cars', GenericSchema)));
+  let model = new GenericModel((mongoose.model('GENERIC_SERVICE', GenericSchema)));
   // let model = new CarModel();
   let genericService = new GenericServices(model);
 

@@ -24,7 +24,6 @@ class CarController extends GenericController<ICar> {
   ): Promise<typeof res> => {
     try {
       const { body } = req;
-      // CarSchemaZod.parse(body);
       const car = await this.service.create(body);
       if (!car) {
         return res.status(500).json({ error: this.errors.internal });

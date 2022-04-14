@@ -10,8 +10,6 @@ export default class CarService extends GenericService<ICar> {
   create = async (obj: ICar): Promise<ICar | ServiceError | null> => {
     const parsed = CarSchemaZod.safeParse(obj);
     if (!parsed.success) {
-      console.log('oiiii');
-      
       return { error: parsed.error };
     }
     return this.model.create(obj);
