@@ -14,4 +14,17 @@ export default class CarService extends GenericService<ICar> {
     }
     return this.model.create(obj);
   };
+
+  update = async (
+    id: string,
+    obj: ICar,
+  ): Promise<ICar | ServiceError | null> => {
+    const parsed = CarSchemaZod.safeParse(obj);
+    if (!parsed.success) {
+      return { error: parsed.error };
+    }
+    const a = this.model.update(id, obj);
+    console.log({ a });
+    return a;
+  };
 }

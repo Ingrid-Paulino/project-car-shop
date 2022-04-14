@@ -55,6 +55,31 @@ class CarController extends GenericController<ICar> {
       return res.status(500).json({ error: this.errors.internal });
     }
   };
+
+  public async update(
+    req: Request<{ id: string }>,
+    res: Response<ICar | ResponseError>,
+  ): Promise<typeof res> {
+    console.log('aaaaa', req, res);
+    
+    try {
+      const car = await this.service.update(req.params.id, req.body);
+
+      if (!car) {
+        return res.status(404).json({ error: this.errors.notFound });
+      }
+      
+      if ('error' in car) {
+        return res.status(400).json({ error: car.error.issues[0].message });
+      }
+  
+      return res.status(200).json(car);
+    } catch (error) {
+      console.log('error', error);
+      
+      return res.status(500).json({ error: this.errors.internal });
+    }
+  }
 }
 
 export default CarController;

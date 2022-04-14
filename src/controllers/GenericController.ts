@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import GenericService from '../services/GenericServices';
-import ControllerErrors from '../enum';
+// import ControllerErrors from '../enum';
 
 export type ResponseError = {
   error: unknown;
@@ -8,6 +8,13 @@ export type ResponseError = {
 
 export interface RequestWithBody<T> extends Request {
   body: T;
+}
+
+enum ControllerErrors {
+  internal = 'Internal Server Error',
+  notFound = 'Object not found',
+  requiredId = 'Id is required',
+  badRequest = 'Bad request',
 }
 
 abstract class GenericController<T> {
@@ -37,6 +44,11 @@ abstract class GenericController<T> {
   abstract readOne(
     req: Request<{ id: string; }>,
     res: Response<T | ResponseError>
+  ): Promise<typeof res>;
+
+  abstract update(
+    req: RequestWithBody<T>,
+    res: Response<T | ResponseError>,
   ): Promise<typeof res>;
 }
 export default GenericController;
