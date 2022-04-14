@@ -1,13 +1,14 @@
+// import { Response, Request } from 'express';
 // import * as sinon from 'sinon';
 // import chai from 'chai';
-// import chaiHttp = require('chai-http');
+// // import chaiHttp = require('chai-http');
 // import mongoose from 'mongoose';
 // import GenericController from '../../../controllers/GenericController';
 // import GenericModel from '../../../models/GenericModel';
 // import app from '../../../app';
 
 
-// chai.use(chaiHttp);
+// // chai.use(chaiHttp);
 // const { expect } = chai;
 
 
@@ -59,8 +60,8 @@
 //   })
 
 //   describe('#create', () => { 
-//     const response = {};
-//     const request = {};
+//     const response: Response;
+//     const request: Request;
 //     let chaiHttpResponse: Response;
 
 //     before(() => {
@@ -76,10 +77,10 @@
     
     
 //     it('É chamado o status com código 201', async() => { 
-//       chaiHttpResponse = await chai.request(app).post('/matchs')
-//       expect(chaiHttpResponse).to.have.status(201);
-//       // await genericController.create(request, response);
-//       // expect(response.status.calledWith(201)).to.be.equal(true);
+//     //   chaiHttpResponse = await chai.request(app).post('/matchs')
+//     //   expect(chaiHttpResponse).to.have.status(201);
+//       await genericController.create(request, response);
+//       expect((response.status as sinon.SinonStub).calledWith(201));
 //     })
 
 //     it('É chamado o json com um objeto', async() => { 
@@ -114,87 +115,87 @@
 // //         Sinon.restore();
 // //       })
       
-//       it('Deve retornar null', async() => { 
-//         const cars = await genericController.readOne('9999');
-//         expect(cars).to.be.null;
-//        })
-//     })
-//   })
+// //       it('Deve retornar null', async() => { 
+// //         const cars = await genericController.readOne('9999');
+// //         expect(cars).to.be.null;
+// //        })
+// //     })
+// //   })
 
 
-//   describe('#update', () => { 
-//     const mockUpdate = {
-//       _id: "4edd40c86762e0fb12000003",
-//       model: "Fiat Uno",
-//       year: 1990,
-//       color: "read",
-//       buyValue: 30500,
-//       seatsQty: 4,
-//       doorsQty: 4
-//     }
+// //   describe('#update', () => { 
+// //     const mockUpdate = {
+// //       _id: "4edd40c86762e0fb12000003",
+// //       model: "Fiat Uno",
+// //       year: 1990,
+// //       color: "read",
+// //       buyValue: 30500,
+// //       seatsQty: 4,
+// //       doorsQty: 4
+// //     }
 
-//     describe('Quando existe o documento', () => { 
-//       before(() => {
-//         Sinon.stub(genericController.model, 'findByIdAndUpdate').resolves(mockUpdate)
-//       });
+// //     describe('Quando existe o documento', () => { 
+// //       before(() => {
+// //         Sinon.stub(genericController.model, 'findByIdAndUpdate').resolves(mockUpdate)
+// //       });
   
-//       after(() => {
-//         Sinon.restore();
-//       })
+// //       after(() => {
+// //         Sinon.restore();
+// //       })
       
-//       it('Deve retornar um objeto', async() => { 
-//         const cars = await genericController.update(mock._id, mockUpdate);
-//         expect(cars).to.be.deep.eq(mockUpdate)
-//        })
-//     })
+// //       it('Deve retornar um objeto', async() => { 
+// //         const cars = await genericController.update(mock._id, mockUpdate);
+// //         expect(cars).to.be.deep.eq(mockUpdate)
+// //        })
+// //     })
 
-//     describe('Quando não existe o documento', () => { 
-//       before(() => {
-//         Sinon.stub(genericController.model, 'findByIdAndUpdate').resolves(null)
-//       });
+// //     describe('Quando não existe o documento', () => { 
+// //       before(() => {
+// //         Sinon.stub(genericController.model, 'findByIdAndUpdate').resolves(null)
+// //       });
   
-//       after(() => {
-//         Sinon.restore();
-//       })
+// //       after(() => {
+// //         Sinon.restore();
+// //       })
       
-//       it('Deve retornar null', async() => { 
-//         const cars = await genericController.update('9999', mockUpdate);
-//         expect(cars).to.be.null;
-//        })
-//     })
-//   })
+// //       it('Deve retornar null', async() => { 
+// //         const cars = await genericController.update('9999', mockUpdate);
+// //         expect(cars).to.be.null;
+// //        })
+// //     })
+// //   })
 
-//   describe('#delete', () => { 
-//     // entender oq meu delete retorna
-//     describe('Quando existe o documento', () => { 
-//       before(() => {
-//         Sinon.stub(genericController.model, 'findByIdAndDelete').resolves(mock)
-//       });
+// //   describe('#delete', () => { 
+// //     // entender oq meu delete retorna
+// //     describe('Quando existe o documento', () => { 
+// //       before(() => {
+// //         Sinon.stub(genericController.model, 'findByIdAndDelete').resolves(mock)
+// //       });
   
-//       after(() => {
-//         Sinon.restore();
-//       })
+// //       after(() => {
+// //         Sinon.restore();
+// //       })
       
-//       it('Deve retornar um objeto', async() => { 
-//         // pq esse readOne vem do servise e não do model?
-//         const cars = await genericController.delete(mock._id);
-//         expect(cars).to.be.deep.eq(mock)
-//        })
-//     })
+// //       it('Deve retornar um objeto', async() => { 
+// //         // pq esse readOne vem do servise e não do model?
+// //         const cars = await genericController.delete(mock._id);
+// //         expect(cars).to.be.deep.eq(mock)
+// //        })
+// //     })
 
-//     describe('Quando não existe o documento', () => { 
-//       before(() => {
-//         Sinon.stub(genericController.model, 'findByIdAndDelete').resolves(null)
-//       });
+// //     describe('Quando não existe o documento', () => { 
+// //       before(() => {
+// //         Sinon.stub(genericController.model, 'findByIdAndDelete').resolves(null)
+// //       });
   
-//       after(() => {
-//         Sinon.restore();
-//       })
+// //       after(() => {
+// //         Sinon.restore();
+// //       })
       
-//       it('Deve retornar null', async() => { 
-//         const cars = await genericController.delete('9999');
-//         expect(cars).to.be.null;
-//        })
-//     })
-//   })
-// })
+// //       it('Deve retornar null', async() => { 
+// //         const cars = await genericController.delete('9999');
+// //         expect(cars).to.be.null;
+// //        })
+// //     })
+// //   })
+// // })

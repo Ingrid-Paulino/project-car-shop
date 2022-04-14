@@ -9,7 +9,7 @@ class CarController extends GenericController<ICar> {
   private _route: string;
 
   constructor(
-    protected service = new CarService(),
+    public service = new CarService(),
     route = '/cars',
   ) {
     super(service);
@@ -56,12 +56,12 @@ class CarController extends GenericController<ICar> {
     }
   };
 
-  public async update(
+  public update = async (
     req: Request<{ id: string }>,
     res: Response<ICar | ResponseError>,
-  ): Promise<typeof res> {
-    console.log('aaaaa', req, res);
-    
+  ): Promise<typeof res> => {
+    // console.log('aaaaa', req);
+    // console.log('bbbbbbbb', res);
     try {
       const car = await this.service.update(req.params.id, req.body);
 
@@ -79,7 +79,7 @@ class CarController extends GenericController<ICar> {
       
       return res.status(500).json({ error: this.errors.internal });
     }
-  }
+  };
 }
 
 export default CarController;
