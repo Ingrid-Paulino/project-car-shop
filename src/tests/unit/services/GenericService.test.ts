@@ -1,11 +1,14 @@
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 import Sinon from 'sinon';
+import GenericServices from '../../../services/GenericServices';
 import GenericModel from '../../../models/GenericModel';
+// import CarModel from '../../../models/CarsModel';
+
 // import CarSchema from '../../../schemas/carSchema';
 
 
-describe('GenericModel', () => { 
+describe('GenericService', () => { 
   const GenericSchema = new mongoose.Schema({
     model: { type: String, required: true },
     year: { type: Number, required: true },
@@ -16,7 +19,12 @@ describe('GenericModel', () => {
     seatsQty: { type: Number, required: true },
   })
 
-  let genericModel = new GenericModel(mongoose.model('Generic', GenericSchema));
+  //pq da ero de class abstract
+  // let genericService = new GenericServices(mongoose.model('Generic', GenericSchema));
+
+  let model = new GenericModel((mongoose.model('cars', GenericSchema)));
+  // let model = new CarModel();
+  let genericService = new GenericServices(model);
 
   const mock = {
     _id: "4edd40c86762e0fb12000003",
@@ -32,7 +40,7 @@ describe('GenericModel', () => {
 
   describe('#read', () => { 
     before(() => {
-      Sinon.stub(genericModel.model, 'find').resolves(mockArray)
+      Sinon.stub(model.model, 'find').resolves(mockArray as never)
     });
 
     after(() => {
@@ -40,14 +48,14 @@ describe('GenericModel', () => {
     })
     
     it('Retorna uma lista', async() => { 
-      const cars = await genericModel.read();
+      const cars = await genericService.read();
       expect(cars).to.be.deep.eq(mockArray)
      })
   })
 
   describe('#create', () => { 
     before(() => {
-      Sinon.stub(genericModel.model, 'create').resolves(mock)
+      Sinon.stub(genericService.model, 'create').resolves(mock)
     });
 
     after(() => {
@@ -55,15 +63,15 @@ describe('GenericModel', () => {
     })
     
     it('Deve retornar um objeto', async() => { 
-      const cars = await genericModel.create(mock);
+      const cars = await genericService.create(mock);
       expect(cars).to.be.deep.equal(mock)
     })
   })
 
-  describe('#readById', () => { 
+  describe('#readOne', () => { 
     describe('Quando existe o documento', () => { 
       before(() => {
-        Sinon.stub(genericModel.model, 'findById').resolves(mock)
+        Sinon.stub(genericService.model, 'readOne').resolves(mock)
       });
   
       after(() => {
@@ -72,14 +80,14 @@ describe('GenericModel', () => {
       
       it('Deve retornar um objeto', async() => { 
         // pq esse readOne vem do servise e não do model?
-        const cars = await genericModel.readOne(mock._id);
+        const cars = await genericService.readOne(mock._id);
         expect(cars).to.be.deep.eq(mock)
        })
     })
 
     describe('Quando não existe o documento', () => { 
       before(() => {
-        Sinon.stub(genericModel.model, 'findById').resolves(null)
+        Sinon.stub(genericService.model, 'readOne').resolves(null)
       });
   
       after(() => {
@@ -87,7 +95,7 @@ describe('GenericModel', () => {
       })
       
       it('Deve retornar null', async() => { 
-        const cars = await genericModel.readOne('9999');
+        const cars = await genericService.readOne('9999');
         expect(cars).to.be.null;
        })
     })
@@ -107,7 +115,7 @@ describe('GenericModel', () => {
 
     describe('Quando existe o documento', () => { 
       before(() => {
-        Sinon.stub(genericModel.model, 'findByIdAndUpdate').resolves(mockUpdate)
+        Sinon.stub(genericService.model, 'update').resolves(mockUpdate)
       });
   
       after(() => {
@@ -115,14 +123,14 @@ describe('GenericModel', () => {
       })
       
       it('Deve retornar um objeto', async() => { 
-        const cars = await genericModel.update(mock._id, mockUpdate);
+        const cars = await genericService.update(mock._id, mockUpdate);
         expect(cars).to.be.deep.eq(mockUpdate)
        })
     })
 
     describe('Quando não existe o documento', () => { 
       before(() => {
-        Sinon.stub(genericModel.model, 'findByIdAndUpdate').resolves(null)
+        Sinon.stub(genericService.model, 'update').resolves(null)
       });
   
       after(() => {
@@ -130,7 +138,7 @@ describe('GenericModel', () => {
       })
       
       it('Deve retornar null', async() => { 
-        const cars = await genericModel.update('9999', mockUpdate);
+        const cars = await genericService.update('9999', mockUpdate);
         expect(cars).to.be.null;
        })
     })
@@ -140,7 +148,7 @@ describe('GenericModel', () => {
     // entender oq meu delete retorna
     describe('Quando existe o documento', () => { 
       before(() => {
-        Sinon.stub(genericModel.model, 'findByIdAndDelete').resolves(mock)
+        Sinon.stub(genericService.model, 'delete').resolves(mock)
       });
   
       after(() => {
@@ -149,14 +157,14 @@ describe('GenericModel', () => {
       
       it('Deve retornar um objeto', async() => { 
         // pq esse readOne vem do servise e não do model?
-        const cars = await genericModel.delete(mock._id);
+        const cars = await genericService.delete(mock._id);
         expect(cars).to.be.deep.eq(mock)
        })
     })
 
     describe('Quando não existe o documento', () => { 
       before(() => {
-        Sinon.stub(genericModel.model, 'findByIdAndDelete').resolves(null)
+        Sinon.stub(genericService.model, 'delete').resolves(null)
       });
   
       after(() => {
@@ -164,7 +172,7 @@ describe('GenericModel', () => {
       })
       
       it('Deve retornar null', async() => { 
-        const cars = await genericModel.delete('9999');
+        const cars = await genericService.delete('9999');
         expect(cars).to.be.null;
        })
     })

@@ -5,16 +5,16 @@ export interface ServiceError {
   error: ZodError;
 }
 
-abstract class GenericService<T> {
-  constructor(protected model: Model<T>) {}
+class GenericService<T> {
+// abstract class GenericService<T> {
+  constructor(public model: Model<T>) {}
+
+  // pq tenho que colocar public
+  // constructor(protected model: Model<T>) {}
 
   public async create(obj: T): Promise<T | null | ServiceError> {
     return this.model.create(obj);
   }
-
-  // public async create(obj: T): Promise<T | null > {
-  //   return this.model.create(obj);
-  // }
 
   public async read(): Promise<T[]> {
     return this.model.read();
@@ -24,10 +24,6 @@ abstract class GenericService<T> {
     return this.model.readOne(id);
   }
 
-  // public async readOne(id: string): Promise<T | null > {
-  //   return this.model.readOne(id);
-  // }
-
   public async update(
     id: string,
     obj: object,
@@ -35,20 +31,9 @@ abstract class GenericService<T> {
     return this.model.update(id, obj);
   }
 
-  // public async update(
-  //   id: string,
-  //   obj: object,
-  // ): Promise<T | null > {
-  //   return this.model.update(id, obj);
-  // }
-
   public async delete(id: string): Promise<T | null | ServiceError> {
     return this.model.delete(id);
   }
-
-  // public async delete(id: string): Promise<T | null > {
-  //   return this.model.delete(id);
-  // }
 }
 
 export default GenericService;
