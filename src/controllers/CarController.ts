@@ -1,5 +1,5 @@
 // import { ZodError } from 'zod';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import GenericController,
 { RequestWithBody, ResponseError } from './GenericController';
 import CarService from '../services/CarService';
@@ -33,6 +33,25 @@ class CarController extends GenericController<ICar> {
       }
       return res.status(201).json(car);
     } catch (err) {
+      return res.status(500).json({ error: this.errors.internal });
+    }
+  };
+
+  readOne = async (
+    req: Request<{ id: string }>,
+    res: Response<ICar | ResponseError>,
+  ): Promise<typeof res> => {
+    const { id } = req.params;
+    if (id.length < 24) {
+      return res.status(400)
+        .json({ error: 'Id must have 24 hexadecimal characters' });
+    } 
+    try {
+      const car = await this.service.readOne(id);
+      return car 
+        ? res.json(car)
+        : res.status(404).json({ error: this.errors.notFound });
+    } catch (error) {
       return res.status(500).json({ error: this.errors.internal });
     }
   };
