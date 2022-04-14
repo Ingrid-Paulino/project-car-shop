@@ -50,5 +50,29 @@ abstract class GenericController<T> {
     req: RequestWithBody<T>,
     res: Response<T | ResponseError>,
   ): Promise<typeof res>;
+
+  // abstract delete(
+  //   req: Request<{ id: string; }>,
+  //   res: Response<T | ResponseError>
+  // ): Promise<typeof res>;
+
+  delete = async (
+    req: Request<{ id: string }>,
+    res: Response<T | ResponseError>,
+  ): Promise<typeof res> => {
+    const { id } = req.params;
+    if (id.length < 24) {
+      return res.status(400)
+        .json({ error: 'Id must have 24 hexadecimal characters' });
+    } 
+    try {
+      const car = await this.service.delete(id);
+      return car 
+        ? res.status(204).json(car)
+        : res.status(404).json({ error: this.errors.notFound });
+    } catch (error) {
+      return res.status(500).json({ error: this.errors.internal });
+    }
+  };
 }
 export default GenericController;
