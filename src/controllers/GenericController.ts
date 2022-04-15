@@ -51,11 +51,6 @@ abstract class GenericController<T> {
     res: Response<T | ResponseError>,
   ): Promise<typeof res>;
 
-  // abstract delete(
-  //   req: Request<{ id: string; }>,
-  //   res: Response<T | ResponseError>
-  // ): Promise<typeof res>;
-
   delete = async (
     req: Request<{ id: string }>,
     res: Response<T | ResponseError>,

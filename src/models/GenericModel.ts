@@ -13,7 +13,7 @@ class GenericModel<T> implements Model<T> {
     this.model.findById({ _id: id });
 
   public update = async (id: string, obj: object): Promise<T | null> => 
-    this.model.findByIdAndUpdate({ _id: id }, obj);
+    this.model.findByIdAndUpdate({ _id: id }, obj, { new: true });
 
   public delete = async (id: string): Promise<T | null> => 
     this.model.findByIdAndDelete({ _id: id });
