@@ -1,12 +1,15 @@
 import { Schema, Document } from 'mongoose';
 import { Motorcycle as IMotorcycle } from '../interfaces/MotorcycleInterface';
 
-interface MotorcycleDocument extends IMotorcycle, Document {}
-const CarSchema = new Schema<MotorcycleDocument>(
-  {
-    category: { type: Array<String>, required: true },
-    engineCapacity: 
-  { versionKey: false },
-);
+export interface MotorcycleDocument extends IMotorcycle, Document {}
+const MotorcycleSchema = new Schema<MotorcycleDocument>({
+  model: { type: String, required: true },
+  year: { type: Number, required: true },
+  color: { type: String, required: true },
+  status: Boolean,
+  buyValue: { type: Number, required: true },
+  category: { type: Object as never, required: true },
+  engineCapacity: { type: Number, required: true },
+}, { versionKey: false });
 
-export default CarSchema;
+export default MotorcycleSchema;

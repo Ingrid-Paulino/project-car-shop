@@ -3,10 +3,7 @@ import mongoose from 'mongoose';
 import Sinon from 'sinon';
 import GenericServices from '../../../services/GenericServices';
 import GenericModel from '../../../models/GenericModel';
-// import CarModel from '../../../models/CarsModel';
-
-// import CarSchema from '../../../schemas/carSchema';
-
+import CarSchemaZod from '../../../interfaces/CarInterface';
 
 describe('GenericService', () => { 
   const GenericSchema = new mongoose.Schema({
@@ -19,12 +16,10 @@ describe('GenericService', () => {
     seatsQty: { type: Number, required: true },
   })
 
-  //pq da ero de class abstract
-  // let genericService = new GenericServices(mongoose.model('Generic', GenericSchema));
 
   let model = new GenericModel((mongoose.model('GENERIC_SERVICE', GenericSchema)));
   // let model = new CarModel();
-  let genericService = new GenericServices(model);
+  let genericService = new GenericServices(model, CarSchemaZod);
 
   const mock = {
     _id: "4edd40c86762e0fb12000003",
