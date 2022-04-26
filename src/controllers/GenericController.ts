@@ -59,7 +59,10 @@ class GenericController<T> {
     res: Response<T[] | ResponseError>,
   ): Promise<typeof res> => {
     try {
+      // console.log('obj');
+
       const objs = await this.service.read();
+      
       return res.status(200).json(objs);
     } catch (err) {
       return res.status(500).json({ error: this.errors.internal });

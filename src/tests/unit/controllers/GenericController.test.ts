@@ -51,7 +51,7 @@ describe('GenericController', () => {
       });
   
       after(() => {
-        sinon.restore();
+       (genericController.service.read as sinon.SinonStub).restore();
       })
       
       it('Retorna uma lista', async() => { 
@@ -73,8 +73,13 @@ describe('GenericController', () => {
   //     res.status = sinon.stub().returns(res)
   
   //     before(() => {
-  //       sinon.stub(genericController.service, 'read').rejects()
+  //       sinon.stub(genericController.service, 'read').resolves(mockArray)
   //     });
+  
+  //     // before(() => {
+  //     //   sinon.stub(genericController.service, 'read').rejects(new Error('error'))
+        
+  //     // });
   
   //     after(() => {
   //       sinon.restore();
