@@ -66,27 +66,27 @@ describe('GenericController', () => {
         expect((res.json as sinon.SinonStub).calledWithMatch(mockArray)).to.be.true
        })
 
-     describe('#erro', () => {
-      const req = {} as Request
-      const res = {} as Response
-      res.json = sinon.stub().returns(null)
-      res.status = sinon.stub().returns(res)
+  //    describe('#erro', () => {
+  //     const req = {} as Request
+  //     const res = {} as Response
+  //     res.json = sinon.stub().returns(null)
+  //     res.status = sinon.stub().returns(res)
   
-      before(() => {
-        sinon.stub(genericController.service, 'read').rejects()
+  //     before(() => {
+  //       sinon.stub(genericController.service, 'read').rejects()
         
-      });
+  //     });
   
-      after(() => {
-        sinon.restore();
-      })
+  //     after(() => {
+  //       sinon.restore();
+  //     })
   
-       it('Se houver um erro retorna erro 500', async() => { 
-        await genericController.read(req, res);
-        // expect().to.be.deep.eq(mockArray)
-        expect((res.status as sinon.SinonStub).calledWith(500)).to.be.true
-       })
-  })
+  //      it('Se houver um erro retorna erro 500', async() => { 
+  //       await genericController.read(req, res);
+  //       // expect().to.be.deep.eq(mockArray)
+  //       expect((res.status as sinon.SinonStub).calledWith(500)).to.be.true
+  //      })
+  // })
      })
 
     })
