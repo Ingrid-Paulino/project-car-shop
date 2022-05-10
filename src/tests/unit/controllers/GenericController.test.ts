@@ -11,7 +11,7 @@ import CarSchemaZod from '../../../interfaces/CarInterface';
 const { expect } = chai;
 
 
-describe('GenericController', () => { 
+describe('GenericController', () => {
   const GenericSchema = new mongoose.Schema({
     model: { type: String, required: true },
     year: { type: Number, required: true },
@@ -38,129 +38,125 @@ describe('GenericController', () => {
 
   const mockArray = [mock];
 
+  const makeRes = () => {
+    const res = {} as Response
+
+    res.status = sinon.stub().returns(res)
+    res.json = sinon.stub().returns(sinon.stub)
+    return res
+  }
+
   describe('#read', () => {
-  
-     describe('#sucesso', () => {
-      const req = {} as Request
-      const res = {} as Response
-      res.json = sinon.stub().returns(null)
-      res.status = sinon.stub().returns(res)
-  
-      before(() => {
-        sinon.stub(genericController.service, 'read').resolves(mockArray)
-      });
-  
-      after(() => {
-       (genericController.service.read as sinon.SinonStub).restore();
-      })
-      
-      it('Retorna uma lista', async() => { 
-        await genericController.read(req, res);
-        // expect().to.be.deep.eq(mockArray)
-        expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true
-       })
-  
-       it('Retorna uma lista', async() => { 
-        await genericController.read(req, res);
-  
-        expect((res.json as sinon.SinonStub).calledWithMatch(mockArray)).to.be.true
-       })
+    // beforeEach(sinon.restore)
+    afterEach(() => sinon.restore())
+    const req = {} as Request
 
-  //    describe('#erro', () => {
-  //     const req = {} as Request
-  //     const res = {} as Response
-  //     res.json = sinon.stub().returns(null)
-  //     res.status = sinon.stub().returns(res)
-  
-  //     before(() => {
-  //       sinon.stub(genericController.service, 'read').rejects()
-        
-  //     });
-  
-  //     after(() => {
-  //       sinon.restore();
-  //     })
-  
-  //      it('Se houver um erro retorna erro 500', async() => { 
-  //       await genericController.read(req, res);
-  //       // expect().to.be.deep.eq(mockArray)
-  //       expect((res.status as sinon.SinonStub).calledWith(500)).to.be.true
-  //      })
-  // })
-     })
-
+    it('Retorna status 200', async () => {
+      sinon.stub(genericController.service, 'read').resolves(mockArray)
+      const res = makeRes()
+      // res.json = sinon.stub().returns(null)
+      // res.status = sinon.stub().returns(res)
+      await genericController.read(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(200)
     })
 
+    it('Retorna uma lista', async () => {
+      sinon.stub(genericController.service, 'read').resolves(mockArray)
+      const res = makeRes()
+      // res.json = sinon.stub().returns(null)
+      // res.status = sinon.stub().returns(res)
+      await genericController.read(req, res);
+      expect((res.json as sinon.SinonStub).getCall(0).args[0]).to.deep.eq(mockArray)
+    })
 
-  describe('#create', () => { 
+    it('Se houver um erro retorna erro 500', async () => {
+      sinon.stub(genericController.service, 'read').rejects()
+      const res = makeRes()
+      // res.json = sinon.stub()
+      // res.status = sinon.stub().returns(res)
+      await genericController.read(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(500)
+    })
+  })
+
+
+  describe('#create', () => {
+    // beforeEach(() => sinon.restore())
+    afterEach(() => sinon.restore())
     const req = {} as Request
-    const res = {} as Response
-    res.json = sinon.stub().returns(null)
-    res.status = sinon.stub().returns(res)
 
-
-    before(() => {
+    it('É chamado o status com código 201', async () => {
+      req.body = {}
       sinon.stub(genericController.service, 'create').resolves(mock)
-    });
-
-    after(() => {
-      sinon.restore();
-    })
-    
-    
-    it('É chamado o status com código 201', async() => { 
-      req.body = {}
+      const res = makeRes()
       await genericController.create(req, res);
-      expect((res.status as sinon.SinonStub).calledWith(201));
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(201);
     })
 
-    it('É chamado o json com um objeto', async() => { 
+    it('É chamado o json com um objeto', async () => {
+      sinon.stub(genericController.service, 'create').resolves(mock)
       req.body = {}
+      const res = makeRes()
       await genericController.create(req, res);
-      expect((res.json as sinon.SinonStub).calledWithMatch(mock)).to.be.true;
+      expect((res.json as sinon.SinonStub).getCall(0).args[0]).to.deep.eq(mock)
+    })
+
+    it('Se houver um erro retorna erro 500', async () => {
+      sinon.stub(genericController.service, 'create').rejects()
+      const res = makeRes()
+      await genericController.create(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(500)
+    })
+
+    it('Deve retornar null se não existir o obj', async () => {
+      sinon.stub(genericController.service, 'create').resolves(null)
+      const res = makeRes()
+      await genericController.create(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(500)
+    })
+
+    it('Deve retornar status 400', async () => {
+      sinon.stub(genericController.service, 'create').resolves({ error: {
+        issues: [{
+          message: 'Expected number, received string',
+        }],
+      } })
+      const res = makeRes()
+      await genericController.create(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(400)
     })
   })
 
-  describe('#readById', () => { 
+  describe('#readById', () => {
+    afterEach(() => sinon.restore())
+
     const req = {} as Request
-    const res = {} as Response
-    res.json = sinon.stub().returns(null)
-    res.status = sinon.stub().returns(res)
-
-    describe('Quando existe o documento', () => { 
-      before(() => {
-        sinon.stub(genericController.service, 'readOne').resolves(mock)
-      });
-  
-      after(() => {
-        sinon.restore();
-      })
-      
-      it('Deve retornar um objeto', async() => { 
-        req.params = {id: "4edd40c86762e0fb12000003"}
-        await genericController.readOne(req, res);
-        expect((res.json as sinon.SinonStub).calledWith(mock));
-       })
+    it('Deve retornar um objeto', async () => {
+      sinon.stub(genericController.service, 'readOne').resolves(mock)
+      req.params = { id: "4edd40c86762e0fb12000003" }
+      const res = makeRes()
+      await genericController.readOne(req, res);
+      expect((res.json as sinon.SinonStub).getCall(0).args[0]).to.deep.eq(mock)
     })
 
-    describe('Quando não existe o documento', () => { 
-      before(() => {
-        sinon.stub(genericController.service, 'readOne').resolves(null)
-      });
-  
-      after(() => {
-        sinon.restore();
-      })
-      
-      it('Deve retornar null', async() => { 
-        await genericController.readOne(req, res);
-        expect((res.json as sinon.SinonStub).calledWith('Object not found'));    
-       })
+    it('Deve retornar null', async () => {
+      sinon.stub(genericController.service, 'readOne').resolves(null)
+      const res = makeRes()
+      await genericController.readOne(req, res);
+      expect((res.json as sinon.SinonStub).getCall(0).args[0]).to.deep.eq({ error: 'Object not found' })
+    })
+
+    it('Se houver um erro retorna erro 500', async () => {
+      sinon.stub(genericController.service, 'readOne').rejects()
+      const res = makeRes()
+      await genericController.readOne(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(500)
     })
   })
 
 
-  describe('#update', () => { 
+
+  describe('#update', () => {
     const mockUpdate = {
       _id: "4edd40c86762e0fb12000003",
       model: "Fiat Uno",
@@ -171,81 +167,99 @@ describe('GenericController', () => {
       doorsQty: 4
     }
 
+    afterEach(() => sinon.restore())
     const req = {} as Request
-    const res = {} as Response
-    res.json = sinon.stub().returns(null)
-    res.status = sinon.stub().returns(res)
 
-
-    describe('Quando existe o documento', () => { 
-      before(() => {
-        sinon.stub(genericController.service, 'update').resolves(mockUpdate)
-      });
-  
-      after(() => {
-        sinon.restore();
-      })
-      
-      it('Deve retornar um objeto', async() => { 
-       req.params = {id: "4edd40c86762e0fb12000003"}
-       await genericController.update(req, res);
-       expect((res.json as sinon.SinonStub).calledWith(mock)); 
-       })
+    it('Retorna status 200', async () => {
+      req.params = { id: "4edd40c86762e0fb12000003" }
+      sinon.stub(genericController.service, 'update').resolves(mockUpdate)
+      const res = makeRes()
+      await genericController.update(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(200)
     })
 
-    describe('Quando não existe o documento', () => { 
-      before(() => {
-        sinon.stub(genericController.service, 'update').resolves(null)
-      });
-  
-      after(() => {
-        sinon.restore();
-      })
-      
-      it('Deve retornar null', async() => {
-        req.params = {id: "4edd40c86762e0fb12000003"}
-        await genericController.update(req, res);
-        expect((res.json as sinon.SinonStub).calledWith(mock)); 
-       })
+    it('Deve retornar um objeto', async () => {
+      sinon.stub(genericController.service, 'update').resolves(mockUpdate)
+      req.params = { id: "4edd40c86762e0fb12000003" }
+      const res = makeRes()
+      await genericController.update(req, res);
+      expect((res.json as sinon.SinonStub).getCall(0).args[0]).to.eq(mockUpdate);
+    })
+
+    it('Se houver um erro retorna erro 500', async () => {
+      req.params = { id: "4edd40c86762e0fb12000003" }
+      sinon.stub(genericController.service, 'update').rejects()
+      const res = makeRes()
+      await genericController.update(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(500)
+    })
+
+    it('Deve retornar null se não existir o obj', async () => {
+      sinon.stub(genericController.service, 'update').resolves(null)
+      const res = makeRes()
+      await genericController.update(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(404)
+    })
+
+    it('Deve retornar status 400', async () => {
+      sinon.stub(genericController.service, 'update').resolves({ error: {
+        issues: [{
+          message: 'Expected number, received string',
+        }],
+      } })
+      const res = makeRes()
+      await genericController.update(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(400)
     })
   })
 
-  describe('#delete', () => { 
+  describe('#delete', () => {
+    afterEach(() => sinon.restore())
     const req = {} as Request
-    const res = {} as Response
-    res.json = sinon.stub().returns(null)
-    res.status = sinon.stub().returns(res)
 
-    describe('Quando existe o documento', () => { 
-      before(() => {
-        sinon.stub(genericController.service, 'delete').resolves(mock)
-      });
-  
-      after(() => {
-        sinon.restore();
-      })
-      
-      it('Deve retornar um objeto', async() => { 
-        req.params = {id: "4edd40c86762e0fb12000003"}
-        await genericController.delete(req, res);
-       expect((res.json as sinon.SinonStub).calledWith(mock));  
-       })
+    it('Retorna status 204', async () => {
+      req.params = { id: "4edd40c86762e0fb12000003" }
+      sinon.stub(genericController.service, 'delete').resolves(mock)
+      const res = makeRes()
+      await genericController.delete(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(204)
     })
 
-    describe('Quando não existe o documento', () => { 
-      before(() => {
-        sinon.stub(genericController.service, 'delete').resolves(null)
-      });
-  
-      after(() => {
-        sinon.restore();
-      })
-      
-      it('Deve retornar null', async() => {
-        req.params = {id: "4edd40c86762e0fb12000003"}
-        await genericController.delete(req, res);
-        expect((res.json as sinon.SinonStub).calledWith(mock)); 
-       })
+    it('Deve retornar um objeto', async () => {
+      sinon.stub(genericController.service, 'delete').resolves(mock)
+      req.params = { id: "4edd40c86762e0fb12000003" }
+      const res = makeRes()
+      await genericController.delete(req, res);
+      expect((res.json as sinon.SinonStub).getCall(0).args[0]).to.eq(mock)
     })
+
+    // it('Deve retornar um objeto', async () => {
+    //   req.params = { id: "0003" }
+    //   sinon.stub(genericController.service, 'delete').resolves(mock)
+    //   const res = makeRes()
+    //   const response = await genericController.delete(req, res);
+
+    //   expect(response).to.be.eq({ error: 'Id must have 24 hexadecimal characters' })
+
+
+    //   // expect((res.json as sinon.SinonStub).getCall(0).args[0]).to.eq({ error: 'Id must have 24 hexadecimal characters' })
+    // })
+
+    it('Se houver um erro retorna erro 500', async () => {
+      req.params = { id: "4edd40c86762e0fb12000003" }
+      sinon.stub(genericController.service, 'delete').rejects()
+      const res = makeRes()
+      await genericController.delete(req, res);
+      expect((res.status as sinon.SinonStub).getCall(0).args[0]).to.eq(500)
+    })
+
+    // it('Deve retornar null', async () => {
+    //   sinon.stub(genericController.service, 'delete').resolves(null)
+    //   const res = makeRes()
+    //   await genericController.delete(req, res);
+    //   expect((res.json as sinon.SinonStub).getCall(0).args[0]).to.deep.eq({ error: 'Id must have 24 hexadecimal characters' })
+    // })
   })
+
 })
+
